@@ -2,11 +2,16 @@ package repository
 
 import (
 	"codetest/board/entity"
+	"codetest/database"
 	"fmt"
 )
 
 type BoardRepositoryImpl struct {
 	Model *entity.Rows
+}
+
+func NewRepository() BoardRepository {
+	return BoardRepositoryImpl{&database.Db.TBoard}
 }
 
 type BoardRepository interface {

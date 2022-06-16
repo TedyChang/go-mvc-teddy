@@ -8,16 +8,16 @@ import (
 	"testing"
 )
 
-type mockBoardRepo struct{}
+type mockRepository struct{}
 
-func (m mockBoardRepo) FindById(id int64) entity.Board {
+func (m mockRepository) FindById(id int64) entity.Board {
 	return entity.Board{
 		Id:       id,
 		Title:    "테스트 제목 7",
 		Contents: "테스트 내용 7",
 	}
 }
-func (m mockBoardRepo) FindAll() []entity.Board {
+func (m mockRepository) FindAll() []entity.Board {
 	return []entity.Board{
 		{
 			Id:       1,
@@ -37,11 +37,11 @@ func (m mockBoardRepo) FindAll() []entity.Board {
 	}
 }
 
-func (m mockBoardRepo) Save(board entity.Board) int64 {
+func (m mockRepository) Save(board entity.Board) int64 {
 	return board.Id
 }
 
-var mockBoardRepository repository.BoardRepository = mockBoardRepo{}
+var mockBoardRepository repository.BoardRepository = mockRepository{}
 
 func TestBoardServiceImpl_GetById(t *testing.T) {
 	type fields struct {

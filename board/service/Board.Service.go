@@ -10,6 +10,10 @@ type BoardServiceImpl struct {
 	Repository repository.BoardRepository
 }
 
+func NewService(boardRepository repository.BoardRepository) BoardServiceImpl {
+	return BoardServiceImpl{boardRepository}
+}
+
 func (r BoardServiceImpl) GetById(id int64) entity.Board {
 	return r.Repository.FindById(id)
 }
