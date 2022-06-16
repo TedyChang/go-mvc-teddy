@@ -4,6 +4,7 @@ import (
 	"codetest/board/dto"
 	boardService "codetest/board/service"
 	"codetest/layer"
+	"fmt"
 )
 
 type Controller struct {
@@ -22,7 +23,11 @@ func (c Controller) SaveBoard(id int64, title string, contents string) {
 }
 
 func (c Controller) GetAll() {
-	c.BoardService.(boardService.BoardServiceImpl).GetAll()
+	arr := c.BoardService.(boardService.BoardServiceImpl).GetAll()
+
+	for _, value := range arr {
+		fmt.Println(value)
+	}
 }
 
 func (c Controller) GetById(id int64) {

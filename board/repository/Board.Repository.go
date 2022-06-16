@@ -11,7 +11,7 @@ type BoardRepositoryImpl struct {
 
 type BoardRepository interface {
 	FindById(id int64)
-	FindAll()
+	FindAll() []entity.Board
 	Save(board entity.Board) int64
 }
 
@@ -23,10 +23,13 @@ func (r BoardRepositoryImpl) FindById(id int64) {
 	}
 }
 
-func (r BoardRepositoryImpl) FindAll() {
-	for _, board := range r.Model.BoardRows {
-		fmt.Println(board)
+func (r BoardRepositoryImpl) FindAll() []entity.Board {
+	arr := make([]entity.Board, len(r.Model.BoardRows))
+
+	for i, board := range r.Model.BoardRows {
+		arr[i] = board
 	}
+	return arr
 }
 
 func (r BoardRepositoryImpl) Save(board entity.Board) int64 {
