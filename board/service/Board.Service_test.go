@@ -84,7 +84,7 @@ func TestBoardServiceImpl_Save(t *testing.T) {
 		Repository repository.BoardRepository
 	}
 	type args struct {
-		dto1 dto.SaveDto
+		dto1 dto.SaveBoardDto
 	}
 	tests := []struct {
 		name   string
@@ -95,7 +95,7 @@ func TestBoardServiceImpl_Save(t *testing.T) {
 		{
 			name:   "board > save > 성공",
 			fields: fields{mockBoardRepository},
-			args: args{dto1: dto.SaveDto{
+			args: args{dto1: dto.SaveBoardDto{
 				Title:    "테스트 1",
 				Contents: "테스트 내용",
 			}},

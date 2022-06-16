@@ -15,7 +15,7 @@ func NewController(impl boardService.BoardServiceImpl) Controller {
 }
 
 func (c Controller) SaveBoard(id int64, title string, contents string) {
-	dto1 := dto.SaveDto{
+	dto1 := dto.SaveBoardDto{
 		Id:       id,
 		Title:    title,
 		Contents: contents,

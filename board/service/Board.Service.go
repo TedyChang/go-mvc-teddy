@@ -18,7 +18,7 @@ func (r BoardServiceImpl) GetById(id int64) entity.Board {
 	return r.Repository.FindById(id)
 }
 
-func (r BoardServiceImpl) Save(dto1 dto.SaveDto) int64 {
+func (r BoardServiceImpl) Save(dto1 dto.SaveBoardDto) int64 {
 	var arr []entity.Board
 	arr = r.Repository.FindAll()
 
