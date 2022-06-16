@@ -7,10 +7,10 @@ import (
 )
 
 type ReplyController struct {
-	ReplyService service.ReplyServiceImpl
+	ReplyService service.ReplyService
 }
 
-func NewReplyController(impl service.ReplyServiceImpl) ReplyController {
+func NewReplyController(impl service.ReplyService) ReplyController {
 	return ReplyController{impl}
 }
 

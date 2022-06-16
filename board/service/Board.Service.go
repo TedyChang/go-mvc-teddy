@@ -6,19 +6,19 @@ import (
 	"codetest/board/repository"
 )
 
-type BoardServiceImpl struct {
+type BoardService struct {
 	Repository repository.BoardRepository
 }
 
-func NewService(boardRepository repository.BoardRepository) BoardServiceImpl {
-	return BoardServiceImpl{boardRepository}
+func NewService(boardRepository repository.BoardRepository) BoardService {
+	return BoardService{boardRepository}
 }
 
-func (r BoardServiceImpl) GetById(id int64) entity.Board {
+func (r BoardService) GetById(id int64) entity.Board {
 	return r.Repository.FindById(id)
 }
 
-func (r BoardServiceImpl) Save(dto1 dto.SaveBoardDto) int64 {
+func (r BoardService) Save(dto1 dto.SaveBoardDto) int64 {
 	var arr []entity.Board
 	arr = r.Repository.FindAll()
 
@@ -37,6 +37,6 @@ func (r BoardServiceImpl) Save(dto1 dto.SaveBoardDto) int64 {
 	return id
 }
 
-func (r BoardServiceImpl) GetAll() []entity.Board {
+func (r BoardService) GetAll() []entity.Board {
 	return r.Repository.FindAll()
 }

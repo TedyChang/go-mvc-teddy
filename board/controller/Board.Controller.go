@@ -7,16 +7,15 @@ import (
 )
 
 type Controller struct {
-	BoardService boardService.BoardServiceImpl
+	BoardService boardService.BoardService
 }
 
-func NewController(impl boardService.BoardServiceImpl) Controller {
+func NewController(impl boardService.BoardService) Controller {
 	return Controller{impl}
 }
 
-func (c Controller) SaveBoard(id int64, title string, contents string) {
+func (c Controller) SaveBoard(title string, contents string) {
 	dto1 := dto.SaveBoardDto{
-		Id:       id,
 		Title:    title,
 		Contents: contents,
 	}

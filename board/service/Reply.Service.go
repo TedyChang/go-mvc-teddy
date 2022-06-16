@@ -6,20 +6,20 @@ import (
 	"codetest/board/repository"
 )
 
-type ReplyServiceImpl struct {
+type ReplyService struct {
 	Repository      repository.ReplyRepository
 	BoardRepository repository.BoardRepository
 }
 
-func NewReplyService(replyRepository repository.ReplyRepository, boardRepository repository.BoardRepository) ReplyServiceImpl {
-	return ReplyServiceImpl{replyRepository, boardRepository}
+func NewReplyService(replyRepository repository.ReplyRepository, boardRepository repository.BoardRepository) ReplyService {
+	return ReplyService{replyRepository, boardRepository}
 }
 
-func (r ReplyServiceImpl) GetById(id int64) entity.Reply {
+func (r ReplyService) GetById(id int64) entity.Reply {
 	return r.Repository.FindById(id)
 }
 
-func (r ReplyServiceImpl) Save(boardId int64, dto1 dto.SaveReplyDto) int64 {
+func (r ReplyService) Save(boardId int64, dto1 dto.SaveReplyDto) int64 {
 	board := r.BoardRepository.FindById(boardId)
 
 	var arr []entity.Reply
@@ -40,6 +40,6 @@ func (r ReplyServiceImpl) Save(boardId int64, dto1 dto.SaveReplyDto) int64 {
 	return id
 }
 
-func (r ReplyServiceImpl) GetAll() []entity.Reply {
+func (r ReplyService) GetAll() []entity.Reply {
 	return r.Repository.FindAll()
 }

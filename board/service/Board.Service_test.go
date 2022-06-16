@@ -69,7 +69,7 @@ func TestBoardServiceImpl_GetById(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := BoardServiceImpl{
+			r := BoardService{
 				Repository: tt.fields.Repository,
 			}
 			if got := r.GetById(tt.args.id); !reflect.DeepEqual(got, tt.want) {
@@ -104,7 +104,7 @@ func TestBoardServiceImpl_Save(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := BoardServiceImpl{
+			r := BoardService{
 				Repository: tt.fields.Repository,
 			}
 			if got := r.Save(tt.args.dto1); got != tt.want {
@@ -147,7 +147,7 @@ func TestBoardServiceImpl_GetAll(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := BoardServiceImpl{
+			r := BoardService{
 				Repository: tt.fields.Repository,
 			}
 			if got := r.GetAll(); !reflect.DeepEqual(got, tt.want) {
