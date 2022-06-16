@@ -5,29 +5,36 @@ import (
 	"fmt"
 )
 
-type BoardRepository struct {
+type BoardRepositoryImpl struct {
 	Model *entity.Rows
 }
 
-func (r BoardRepository) FindById(id int64) {
-	for _, board := range r.Model.Rows {
-		if isId(board, id) {
+type BoardRepository interface {
+	FindById(id int64)
+	FindAll()
+	Save(board entity.Board) int64
+}
+
+func (r BoardRepositoryImpl) FindById(id int64) {
+	for _, board := range r.Model.BoardRows {
+		if isBoardId(board, id) {
 			fmt.Println(board)
 		}
 	}
 }
 
-func (r BoardRepository) FindAll() {
-	for _, board := range r.Model.Rows {
+func (r BoardRepositoryImpl) FindAll() {
+	for _, board := range r.Model.BoardRows {
 		fmt.Println(board)
 	}
 }
 
-func (r *BoardRepository) Save(board entity.Board) {
-	r.Model.Rows = append(r.Model.Rows, board)
+func (r BoardRepositoryImpl) Save(board entity.Board) int64 {
+	r.Model.BoardRows = append(r.Model.BoardRows, board)
 	fmt.Println("save : ", board.Title)
+	return board.Id
 }
 
-func isId(board entity.Board, id int64) bool {
+func isBoardId(board entity.Board, id int64) bool {
 	return board.Id == id
 }

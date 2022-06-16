@@ -1,7 +1,8 @@
 package entity
 
 type Rows struct {
-	Rows []Board
+	BoardRows []Board
+	ReplyRows []Reply
 }
 
 type Board struct {

@@ -12,7 +12,7 @@ type DbTable struct {
 
 func (r *DbTable) DbSetting() {
 	r.TBoard = board.Rows{
-		Rows: []board.Board{
+		BoardRows: []board.Board{
 			{Id: 1, Title: "테스트 글입니다 1", Contents: "내용입니다 1"},
 			{Id: 2, Title: "테스트 글입니다 2", Contents: "내용입니다 2"},
 			{Id: 3, Title: "테스트 글입니다 3", Contents: "내용입니다 3"},
