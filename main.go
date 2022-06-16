@@ -41,11 +41,11 @@ func main() {
 	// session 001 board service di
 
 	boardControllerDI.(boardController.Controller).SaveBoard(7, "컨트롤러에서 올린 글입니다.", "내용은 없습니다")
-	boardControllerDI.(boardController.Controller).GetAll()
+	boardControllerDI.(boardController.Controller).GetById(3)
 
 	// session 002 user service di
 
-	userServiceDI.GetById(1)
+	userServiceDI.(userService.UserServiceImpl).GetById(1)
 	userServiceDI.(userService.UserServiceImpl).Save(7, "저스틴")
 	userServiceDI.(userService.UserServiceImpl).GetAll()
 

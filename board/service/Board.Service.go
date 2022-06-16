@@ -10,8 +10,8 @@ type BoardServiceImpl struct {
 	Repository repository.BoardRepository
 }
 
-func (r BoardServiceImpl) GetById(id int64) {
-	r.Repository.FindById(id)
+func (r BoardServiceImpl) GetById(id int64) entity.Board {
+	return r.Repository.FindById(id)
 }
 
 func (r BoardServiceImpl) Save(dto1 dto.SaveDto) int64 {

@@ -10,7 +10,13 @@ import (
 
 type mockBoardRepo struct{}
 
-func (m mockBoardRepo) FindById(id int64) {}
+func (m mockBoardRepo) FindById(id int64) entity.Board {
+	return entity.Board{
+		Id:       id,
+		Title:    "테스트 제목 7",
+		Contents: "테스트 내용 7",
+	}
+}
 func (m mockBoardRepo) FindAll() []entity.Board {
 	return []entity.Board{
 		{
@@ -36,6 +42,42 @@ func (m mockBoardRepo) Save(board entity.Board) int64 {
 }
 
 var mockBoardRepository repository.BoardRepository = mockBoardRepo{}
+
+func TestBoardServiceImpl_GetById(t *testing.T) {
+	type fields struct {
+		Repository repository.BoardRepository
+	}
+	type args struct {
+		id int64
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   entity.Board
+	}{
+		{
+			name:   "board > getById > 성공",
+			fields: fields{mockBoardRepository},
+			args:   args{int64(7)},
+			want: entity.Board{
+				Id:       7,
+				Title:    "테스트 제목 7",
+				Contents: "테스트 내용 7",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := BoardServiceImpl{
+				Repository: tt.fields.Repository,
+			}
+			if got := r.GetById(tt.args.id); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetById() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func TestBoardServiceImpl_Save(t *testing.T) {
 	type fields struct {

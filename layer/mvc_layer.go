@@ -6,7 +6,6 @@ type Repository interface {
 }
 
 type Service interface {
-	GetById(int64)
 }
 
 type Controller interface {

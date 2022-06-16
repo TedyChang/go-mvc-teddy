@@ -31,5 +31,5 @@ func (c Controller) GetAll() {
 }
 
 func (c Controller) GetById(id int64) {
-	c.BoardService.(boardService.BoardServiceImpl).GetById(id)
+	fmt.Println(c.BoardService.(boardService.BoardServiceImpl).GetById(id))
 }
