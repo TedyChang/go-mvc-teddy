@@ -16,15 +16,15 @@ import (
 
 func InitializeBoardController() controller.Controller {
 	boardRepository := repository.NewRepository()
-	boardServiceImpl := service.NewService(boardRepository)
-	controllerController := controller.NewController(boardServiceImpl)
+	boardService := service.NewService(boardRepository)
+	controllerController := controller.NewController(boardService)
 	return controllerController
 }
 
 func InitializeReplyController() controller.ReplyController {
 	replyRepository := repository.NewReplyRepository()
 	boardRepository := repository.NewRepository()
-	replyServiceImpl := service.NewReplyService(replyRepository, boardRepository)
-	replyController := controller.NewReplyController(replyServiceImpl)
+	replyService := service.NewReplyService(replyRepository, boardRepository)
+	replyController := controller.NewReplyController(replyService)
 	return replyController
 }

@@ -1,6 +1,5 @@
 package board
 
-//
 //func InitializeBoardController() controller.Controller {
 //	wire.Build(controller.NewController, service.NewService, repository.NewRepository)
 //	return controller.Controller{}

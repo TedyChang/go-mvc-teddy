@@ -13,3 +13,9 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/aws.xml
+/.idea/git_toolbox_prj.xml
+/.idea/go-mvc-teddy.iml
+/.idea/modules.xml
+/.idea/vcs.xml

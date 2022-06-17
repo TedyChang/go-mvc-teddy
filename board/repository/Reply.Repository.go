@@ -6,15 +6,21 @@ import (
 	"fmt"
 )
 
-type ReplyRepository struct {
+type ReplyRepositoryImpl struct {
 	Model *entity.Rows
 }
 
-func NewReplyRepository() ReplyRepository {
-	return ReplyRepository{&database.Db.TBoard}
+type ReplyRepository interface {
+	FindById(id int64) entity.Reply
+	FindAll() []entity.Reply
+	Save(reply entity.Reply) int64
 }
 
-func (r ReplyRepository) FindById(id int64) entity.Reply {
+func NewReplyRepository() ReplyRepository {
+	return ReplyRepositoryImpl{&database.Db.TBoard}
+}
+
+func (r ReplyRepositoryImpl) FindById(id int64) entity.Reply {
 	result := entity.Reply{}
 	for _, reply := range r.Model.ReplyRows {
 		if isReplyId(reply, id) {
@@ -25,7 +31,7 @@ func (r ReplyRepository) FindById(id int64) entity.Reply {
 	return result
 }
 
-func (r ReplyRepository) FindAll() []entity.Reply {
+func (r ReplyRepositoryImpl) FindAll() []entity.Reply {
 	arr := make([]entity.Reply, len(r.Model.ReplyRows))
 
 	for i, reply := range r.Model.ReplyRows {
@@ -34,7 +40,7 @@ func (r ReplyRepository) FindAll() []entity.Reply {
 	return arr
 }
 
-func (r ReplyRepository) Save(reply entity.Reply) int64 {
+func (r ReplyRepositoryImpl) Save(reply entity.Reply) int64 {
 	r.Model.ReplyRows = append(r.Model.ReplyRows, reply)
 	fmt.Println("save : ", reply.Content)
 	return reply.Id

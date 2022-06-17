@@ -10,14 +10,14 @@ type BoardRepositoryImpl struct {
 	Model *entity.Rows
 }
 
-func NewRepository() BoardRepository {
-	return BoardRepositoryImpl{&database.Db.TBoard}
-}
-
 type BoardRepository interface {
 	FindById(id int64) entity.Board
 	FindAll() []entity.Board
 	Save(board entity.Board) int64
+}
+
+func NewRepository() BoardRepository {
+	return BoardRepositoryImpl{&database.Db.TBoard}
 }
 
 func (r BoardRepositoryImpl) FindById(id int64) entity.Board {
