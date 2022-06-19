@@ -3,43 +3,37 @@ package repository
 import (
 	"codetest/database"
 	"codetest/user/entity"
-	"fmt"
+	"gorm.io/gorm"
 )
 
+type Model interface {
+	Model(interface{}) (tx *gorm.DB)
+	First(dest interface{}, conds ...interface{}) (tx *gorm.DB)
+	Find(dest interface{}, conds ...interface{}) (tx *gorm.DB)
+	Create(value interface{}) (tx *gorm.DB)
+}
+
 type UserRepository struct {
-	Model *entity.Rows
+	Model Model
 }
 
 func NewUserRepository() UserRepository {
-	return UserRepository{&database.Db.TUser}
+	return UserRepository{database.Db}
 }
 
 func (r UserRepository) FindById(id int64) entity.User {
-	result := entity.User{}
-	for _, user := range r.Model.Rows {
-		if isId(user, id) {
-			result = user
-			break
-		}
-	}
-	return result
+	u := entity.User{}
+	r.Model.First(u, "id = ?", id)
+	return u
 }
 
 func (r UserRepository) FindAll() []entity.User {
-	arr := make([]entity.User, len(r.Model.Rows))
-
-	for i, user := range r.Model.Rows {
-		arr[i] = user
-	}
-	return arr
+	var users = []entity.User{}
+	r.Model.Find(&users)
+	return users
 }
 
 func (r *UserRepository) Save(user entity.User) int64 {
-	r.Model.Rows = append(r.Model.Rows, user)
-	fmt.Println("save : ", user.Name)
-	return user.Id
-}
-
-func isId(user entity.User, id int64) bool {
-	return user.Id == id
+	_ = r.Model.Create(&user)
+	return user.ID
 }

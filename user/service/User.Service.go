@@ -24,13 +24,13 @@ func (r UserService) Save(dto dto.SaveUserDto) int64 {
 
 	var max = int64(0)
 	for _, v := range arr {
-		if v.Id > max {
-			max = v.Id
+		if v.ID > max {
+			max = v.ID
 		}
 	}
 
 	id := r.Repository.Save(entity.User{
-		Id:   max + 1,
+		ID:   max + 1,
 		Name: dto.Name,
 	})
 
