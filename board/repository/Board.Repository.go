@@ -3,49 +3,45 @@ package repository
 import (
 	"codetest/board/entity"
 	"codetest/database"
-	"fmt"
+	"gorm.io/gorm"
 )
 
-type BoardRepositoryImpl struct {
-	Model *entity.Rows
+type Model interface {
+	Model(interface{}) (tx *gorm.DB)
+	First(dest interface{}, conds ...interface{}) (tx *gorm.DB)
+	Find(dest interface{}, conds ...interface{}) (tx *gorm.DB)
+	Create(value interface{}) (tx *gorm.DB)
+	Where(query interface{}, args ...interface{}) (tx *gorm.DB)
 }
 
-type BoardRepository interface {
-	FindById(id int64) entity.Board
-	FindAll() []entity.Board
-	Save(board entity.Board) int64
+type BoardRepository struct {
+	Model
 }
 
 func NewRepository() BoardRepository {
-	return BoardRepositoryImpl{&database.Db.TBoard}
+	return BoardRepository{database.Db}
 }
 
-func (r BoardRepositoryImpl) FindById(id int64) entity.Board {
-	result := entity.Board{}
-	for _, board := range r.Model.BoardRows {
-		if isBoardId(board, id) {
-			result = board
-			break
-		}
-	}
-	return result
+func (r BoardRepository) FindById(id int64) entity.Board {
+	b := entity.Board{}
+	r.First(&b, "id = ? ", id)
+	return b
 }
 
-func (r BoardRepositoryImpl) FindAll() []entity.Board {
-	arr := make([]entity.Board, len(r.Model.BoardRows))
-
-	for i, board := range r.Model.BoardRows {
-		arr[i] = board
-	}
-	return arr
+func (r BoardRepository) FindAll() []entity.Board {
+	var boards []entity.Board
+	r.Find(&boards)
+	return boards
 }
 
-func (r BoardRepositoryImpl) Save(board entity.Board) int64 {
-	r.Model.BoardRows = append(r.Model.BoardRows, board)
-	fmt.Println("save : ", board.Title)
-	return board.Id
+func (r BoardRepository) Save(board entity.Board) int64 {
+	_ = r.Create(&board)
+	return board.ID
 }
 
-func isBoardId(board entity.Board, id int64) bool {
-	return board.Id == id
+func (r BoardRepository) IsExist(id int64) bool {
+	var board entity.Board
+	r.Where("id = ?", id).First(&board)
+
+	return board.ID != 0
 }

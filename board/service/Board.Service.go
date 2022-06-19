@@ -19,18 +19,7 @@ func (r BoardService) GetById(id int64) entity.Board {
 }
 
 func (r BoardService) Save(dto1 dto.SaveBoardDto) int64 {
-	var arr []entity.Board
-	arr = r.Repository.FindAll()
-
-	var max = int64(0)
-	for _, v := range arr {
-		if v.Id > max {
-			max = v.Id
-		}
-	}
-
 	id := r.Repository.Save(entity.Board{
-		Id:       max + 1,
 		Title:    dto1.Title,
 		Contents: dto1.Contents,
 	})

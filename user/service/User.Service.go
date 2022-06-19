@@ -19,18 +19,7 @@ func (r UserService) GetById(id int64) entity.User {
 }
 
 func (r UserService) Save(dto dto.SaveUserDto) int64 {
-	var arr []entity.User
-	arr = r.Repository.FindAll()
-
-	var max = int64(0)
-	for _, v := range arr {
-		if v.ID > max {
-			max = v.ID
-		}
-	}
-
 	id := r.Repository.Save(entity.User{
-		ID:   max + 1,
 		Name: dto.Name,
 	})
 

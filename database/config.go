@@ -5,7 +5,6 @@ import (
 	entity2 "codetest/user/entity"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"time"
 )
 
 var Db *gorm.DB
@@ -23,11 +22,11 @@ func GormSetting() {
 	db.AutoMigrate(&entity.Reply{})
 	db.AutoMigrate(&entity2.User{})
 
-	db.Create(&entity2.User{
-		CreatedAt: time.Time{},
-		UpdatedAt: time.Time{},
-		DeletedAt: gorm.DeletedAt{},
-		Name:      "teddy",
-	})
+	//db.Create(&entity2.User{
+	//	CreatedAt: time.Time{},
+	//	UpdatedAt: time.Time{},
+	//	DeletedAt: gorm.DeletedAt{},
+	//	Name:      "teddy",
+	//})
 
 }

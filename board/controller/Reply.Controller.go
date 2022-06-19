@@ -19,7 +19,7 @@ func (c ReplyController) SaveReply(boardId int64, contents string) {
 		Contents: contents,
 	}
 
-	c.ReplyService.Save(boardId, dto1)
+	fmt.Println("reply id:", c.ReplyService.Save(boardId, dto1))
 }
 
 func (c ReplyController) GetAllReply() {

@@ -20,21 +20,13 @@ func (r ReplyService) GetById(id int64) entity.Reply {
 }
 
 func (r ReplyService) Save(boardId int64, dto1 dto.SaveReplyDto) int64 {
-	board := r.BoardRepository.FindById(boardId)
-
-	var arr []entity.Reply
-	arr = r.Repository.FindAll()
-
-	var max = int64(0)
-	for _, v := range arr {
-		if v.Id > max {
-			max = v.Id
-		}
+	isExistBoard := r.BoardRepository.IsExist(boardId)
+	if !isExistBoard {
+		return 0
 	}
 
 	id := r.Repository.Save(entity.Reply{
-		Id:      max + 1,
-		Board:   board,
+		Board:   entity.Board{ID: boardId},
 		Content: dto1.Contents,
 	})
 	return id

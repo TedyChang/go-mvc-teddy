@@ -14,7 +14,7 @@ type Model interface {
 }
 
 type UserRepository struct {
-	Model Model
+	Model
 }
 
 func NewUserRepository() UserRepository {
@@ -23,17 +23,17 @@ func NewUserRepository() UserRepository {
 
 func (r UserRepository) FindById(id int64) entity.User {
 	u := entity.User{}
-	r.Model.First(u, "id = ?", id)
+	r.First(&u, "id = ?", id)
 	return u
 }
 
 func (r UserRepository) FindAll() []entity.User {
-	var users = []entity.User{}
-	r.Model.Find(&users)
+	var users []entity.User
+	r.Find(&users)
 	return users
 }
 
 func (r *UserRepository) Save(user entity.User) int64 {
-	_ = r.Model.Create(&user)
+	_ = r.Create(&user)
 	return user.ID
 }
