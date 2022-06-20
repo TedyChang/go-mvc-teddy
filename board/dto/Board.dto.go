@@ -1,6 +1,6 @@
 package dto
 
 type SaveBoardDto struct {
-	Title    string
-	Contents string
+	Title    string `json:"title" binding:"required"`
+	Contents string `json:"contents"`
 }

@@ -20,6 +20,8 @@ func RestApi() {
 	UserController := user.InitializeUserController()
 
 	r.GET("/boards", boardController.GetAll())
+	r.GET("/boards/:id", boardController.GetById())
+	r.POST("/boards", boardController.SaveBoard())
 
 	r.GET("/replies", func(c *gin.Context) {
 		ReplyController.GetAllReply()
