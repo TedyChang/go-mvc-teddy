@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func RestApi() {
+func RestApi(domain string) {
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -23,15 +23,15 @@ func RestApi() {
 	r.GET("/boards/:id", boardController.GetById())
 	r.POST("/boards", boardController.SaveBoard())
 
-	r.GET("/replies", func(c *gin.Context) {
-		ReplyController.GetAllReply()
-	})
+	r.GET("/replies", ReplyController.GetAllReply())
+	r.GET("/boards/replies/:reply", ReplyController.GetAllReply())
+	r.POST("/boards/:board/replies", ReplyController.SaveReply())
 
 	r.GET("/users", func(c *gin.Context) {
 		UserController.GetAll()
 	})
 
-	err := r.Run("localhost:1234")
+	err := r.Run(domain)
 	if err != nil {
 		return
 	}

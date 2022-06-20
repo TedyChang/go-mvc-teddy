@@ -3,8 +3,8 @@ package controller
 import (
 	"codetest/board/dto"
 	boardService "codetest/board/service"
+	"codetest/util/gin_util"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"strconv"
 )
 
@@ -18,18 +18,15 @@ func NewController(impl boardService.BoardService) Controller {
 
 func (r Controller) SaveBoard() func(c *gin.Context) {
 	return func(c *gin.Context) {
-		boardDto := &dto.SaveBoardDto{}
+		var boardDto dto.SaveBoardDto
 
-		err := c.ShouldBindJSON(boardDto)
-		if err != nil {
-			c.JSON(http.StatusBadRequest,
-				gin.H{"message": "error : not SaveBoard"})
+		err1 := c.ShouldBindJSON(&boardDto)
+		if err1 != nil {
+			gin_util.BadJson(c, gin.H{"message": "error : not SaveBoard"})
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"id": r.BoardService.Save(*boardDto),
-		})
+		gin_util.OkJson(c, gin.H{"id": r.BoardService.Save(boardDto)})
 	}
 }
 
@@ -37,22 +34,18 @@ func (r Controller) GetAll() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		arr := r.BoardService.GetAll()
 
-		c.JSON(http.StatusOK, gin.H{
-			"data": arr,
-		})
+		gin_util.OkJson(c, gin.H{"data": arr})
 	}
 }
 
 func (r Controller) GetById() func(c *gin.Context) {
 	return func(c *gin.Context) {
-		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
-		if err != nil {
-			c.JSON(http.StatusBadRequest,
-				gin.H{"message": "error : id is not number"})
+		id, err1 := strconv.ParseInt(c.Param("id"), 10, 64)
+		if err1 != nil {
+			gin_util.BadJson(c, gin.H{"message": "error : id is not number"})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"data": r.BoardService.GetById(id),
-		})
+
+		gin_util.OkJson(c, gin.H{"data": r.BoardService.GetById(id)})
 	}
 }

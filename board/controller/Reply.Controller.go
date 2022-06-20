@@ -3,7 +3,10 @@ package controller
 import (
 	"codetest/board/dto"
 	"codetest/board/service"
-	"fmt"
+	"codetest/util/gin_util"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
 )
 
 type ReplyController struct {
@@ -14,22 +17,42 @@ func NewReplyController(impl service.ReplyService) ReplyController {
 	return ReplyController{impl}
 }
 
-func (c ReplyController) SaveReply(boardId int64, contents string) {
-	dto1 := dto.SaveReplyDto{
-		Contents: contents,
-	}
+func (r ReplyController) SaveReply() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		boardId, err1 := strconv.ParseInt(c.Param("board"), 10, 64)
+		if err1 != nil {
+			gin_util.BadJson(c, gin.H{"message": "error : board is not number"})
+			return
+		}
 
-	fmt.Println("reply id:", c.ReplyService.Save(boardId, dto1))
+		var replyDto dto.SaveReplyDto
+
+		err2 := c.ShouldBindJSON(&replyDto)
+		if err2 != nil {
+			gin_util.BadJson(c, gin.H{"message": "error : not SaveBoard"})
+			return
+		}
+
+		gin_util.OkJson(c, gin.H{"id": r.ReplyService.Save(boardId, replyDto)})
+	}
 }
 
-func (c ReplyController) GetAllReply() {
-	arr := c.ReplyService.GetAll()
+func (r ReplyController) GetAllReply() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		arr := r.ReplyService.GetAll()
 
-	for _, value := range arr {
-		fmt.Println(value)
+		gin_util.OkJson(c, gin.H{"data": arr})
 	}
 }
 
-func (c ReplyController) GetReplyById(id int64) {
-	fmt.Println(c.ReplyService.GetById(id))
+func (r ReplyController) GetReplyById() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		id, err1 := strconv.ParseInt(c.Param("reply"), 10, 64)
+		if err1 != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error : reply is not number"})
+			return
+		}
+
+		gin_util.OkJson(c, gin.H{"data": r.ReplyService.GetById(id)})
+	}
 }

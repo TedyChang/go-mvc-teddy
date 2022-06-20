@@ -1,5 +1,5 @@
 package dto
 
 type SaveReplyDto struct {
-	Contents string
+	Contents string `json:"contents" binding:"required"`
 }
