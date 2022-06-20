@@ -10,9 +10,7 @@ import (
 func RestApi(domain string) {
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "hello world",
-		})
+		c.JSON(http.StatusOK, gin.H{"message": "hello world"})
 	})
 
 	boardController := board.InitializeBoardController()
@@ -24,12 +22,12 @@ func RestApi(domain string) {
 	r.POST("/boards", boardController.SaveBoard())
 
 	r.GET("/replies", ReplyController.GetAllReply())
-	r.GET("/boards/replies/:reply", ReplyController.GetAllReply())
+	r.GET("/boards/replies/:reply", ReplyController.GetReplyById())
 	r.POST("/boards/:board/replies", ReplyController.SaveReply())
 
-	r.GET("/users", func(c *gin.Context) {
-		UserController.GetAll()
-	})
+	r.GET("/users", UserController.GetAll())
+	r.GET("/users/:user", UserController.GetById())
+	r.POST("/users", UserController.SaveUser())
 
 	err := r.Run(domain)
 	if err != nil {
