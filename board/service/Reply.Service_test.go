@@ -12,9 +12,9 @@ type mockReplyRepositoryImpl struct{}
 
 func (m mockReplyRepositoryImpl) FindById(id int64) entity.Reply {
 	return entity.Reply{
-		Id: id,
+		ID: id,
 		Board: entity.Board{
-			Id:       1,
+			ID:       1,
 			Title:    "테스트 제목 7",
 			Contents: "테스트 내용 7",
 		},
@@ -25,18 +25,18 @@ func (m mockReplyRepositoryImpl) FindById(id int64) entity.Reply {
 func (m mockReplyRepositoryImpl) FindAll() []entity.Reply {
 	return []entity.Reply{
 		{
-			Id: 1,
+			ID: 1,
 			Board: entity.Board{
-				Id:       2,
+				ID:       2,
 				Title:    "테스트 제목 7",
 				Contents: "테스트 내용 7",
 			},
 			Content: "안녕하세요 반갑습니다.",
 		},
 		{
-			Id: 2,
+			ID: 2,
 			Board: entity.Board{
-				Id:       2,
+				ID:       2,
 				Title:    "테스트 제목 7",
 				Contents: "테스트 내용 7",
 			},
@@ -46,10 +46,10 @@ func (m mockReplyRepositoryImpl) FindAll() []entity.Reply {
 }
 
 func (m mockReplyRepositoryImpl) Save(reply entity.Reply) int64 {
-	return reply.Id
+	return reply.ID
 }
 
-var mockReply repository.ReplyRepository = mockReplyRepositoryImpl{}
+var mockReply repository.ReplyRepository = repository.ReplyRepository{}
 
 func TestReplyService_GetById(t *testing.T) {
 	type fields struct {
@@ -70,9 +70,9 @@ func TestReplyService_GetById(t *testing.T) {
 			fields: fields{mockReply, mockBoardRepository},
 			args:   args{int64(30)},
 			want: entity.Reply{
-				Id: 30,
+				ID: 30,
 				Board: entity.Board{
-					Id:       1,
+					ID:       1,
 					Title:    "테스트 제목 7",
 					Contents: "테스트 내용 7",
 				},
@@ -147,18 +147,18 @@ func TestReplyService_GetAll(t *testing.T) {
 			},
 			want: []entity.Reply{
 				{
-					Id: 1,
+					ID: 1,
 					Board: entity.Board{
-						Id:       2,
+						ID:       2,
 						Title:    "테스트 제목 7",
 						Contents: "테스트 내용 7",
 					},
 					Content: "안녕하세요 반갑습니다.",
 				},
 				{
-					Id: 2,
+					ID: 2,
 					Board: entity.Board{
-						Id:       2,
+						ID:       2,
 						Title:    "테스트 제목 7",
 						Contents: "테스트 내용 7",
 					},

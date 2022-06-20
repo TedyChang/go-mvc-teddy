@@ -7,7 +7,6 @@ import (
 )
 
 type Model interface {
-	Model(interface{}) (tx *gorm.DB)
 	First(dest interface{}, conds ...interface{}) (tx *gorm.DB)
 	Find(dest interface{}, conds ...interface{}) (tx *gorm.DB)
 	Create(value interface{}) (tx *gorm.DB)
