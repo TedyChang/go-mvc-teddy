@@ -21,7 +21,7 @@ func main() {
 	db.AutoMigrate(&entity.Reply{})
 	db.AutoMigrate(&entity2.User{})
 
-	// Create
+	//Create
 	//db.Create(&Product{Code: "D42", Price: 100})
 
 	// Read

@@ -16,13 +16,11 @@ func NewUserController(impl service.UserService) UserController {
 
 func (c UserController) SaveUser(name string) {
 	dto1 := dto.SaveUserDto{Name: name}
-
 	c.UserService.Save(dto1)
 }
 
 func (c UserController) GetAll() {
 	arr := c.UserService.GetAll()
-
 	for _, value := range arr {
 		fmt.Println(value)
 	}

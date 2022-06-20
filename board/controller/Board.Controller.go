@@ -4,6 +4,8 @@ import (
 	"codetest/board/dto"
 	boardService "codetest/board/service"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type Controller struct {
@@ -14,23 +16,24 @@ func NewController(impl boardService.BoardService) Controller {
 	return Controller{impl}
 }
 
-func (c Controller) SaveBoard(title string, contents string) {
+func (r Controller) SaveBoard(title string, contents string) {
 	dto1 := dto.SaveBoardDto{
 		Title:    title,
 		Contents: contents,
 	}
 
-	c.BoardService.Save(dto1)
+	r.BoardService.Save(dto1)
 }
 
-func (c Controller) GetAll() {
-	arr := c.BoardService.GetAll()
-
-	for _, value := range arr {
-		fmt.Println(value)
+func (r Controller) GetAll() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		arr := r.BoardService.GetAll()
+		c.JSON(http.StatusOK, gin.H{
+			"data": arr,
+		})
 	}
 }
 
-func (c Controller) GetById(id int64) {
-	fmt.Println(c.BoardService.GetById(id))
+func (r Controller) GetById(id int64) {
+	fmt.Println(r.BoardService.GetById(id))
 }
