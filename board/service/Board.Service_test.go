@@ -10,13 +10,9 @@ import (
 	"time"
 )
 
-type mockRepositoryImpl struct {
-	repository.Model
-}
-
 type MockModel struct{}
 
-func (m MockModel) First(dest interface{}, conds ...interface{}) (tx *gorm.DB) {
+func (m MockModel) First(dest interface{}, _ ...interface{}) repository.BoardModel {
 	*dest.(*entity.Board) = entity.Board{
 		ID:        7,
 		CreatedAt: time.Time{},
@@ -25,9 +21,9 @@ func (m MockModel) First(dest interface{}, conds ...interface{}) (tx *gorm.DB) {
 		Title:     "테스트 제목 7",
 		Contents:  "테스트 내용 7",
 	}
-	return nil
+	return m
 }
-func (m MockModel) Find(dest interface{}, conds ...interface{}) (tx *gorm.DB) {
+func (m MockModel) Find(dest interface{}, _ ...interface{}) repository.BoardModel {
 	*dest.(*[]entity.Board) = []entity.Board{
 		{
 			ID:       1,
@@ -45,9 +41,9 @@ func (m MockModel) Find(dest interface{}, conds ...interface{}) (tx *gorm.DB) {
 			Contents: "게시판 내용 3",
 		},
 	}
-	return nil
+	return m
 }
-func (m MockModel) Create(value interface{}) (tx *gorm.DB) {
+func (m MockModel) Create(value interface{}) repository.BoardModel {
 	*value.(*entity.Board) = entity.Board{
 		ID:        4,
 		CreatedAt: time.Time{},
@@ -56,10 +52,10 @@ func (m MockModel) Create(value interface{}) (tx *gorm.DB) {
 		Title:     "테스트 제목 7",
 		Contents:  "테스트 내용 7",
 	}
-	return nil
+	return m
 }
-func (m MockModel) Where(query interface{}, args ...interface{}) (tx *gorm.DB) {
-	return nil
+func (m MockModel) Where(interface{}, ...interface{}) repository.BoardModel {
+	return m
 }
 
 func (m MockModel) FindAll() []entity.Board {
@@ -86,7 +82,7 @@ func (m MockModel) Save(board entity.Board) int64 {
 	return board.ID
 }
 
-var mockBoardRepository = repository.BoardRepository(mockRepositoryImpl{Model: MockModel{}})
+var mockBoardRepository = repository.BoardRepository{BoardModel: MockModel{}}
 
 func TestBoardServiceImpl_GetById(t *testing.T) {
 	type fields struct {

@@ -4,52 +4,82 @@ import (
 	"codetest/board/dto"
 	"codetest/board/entity"
 	"codetest/board/repository"
+	"gorm.io/gorm"
 	"reflect"
 	"testing"
+	"time"
 )
 
-type mockReplyRepositoryImpl struct{}
+type MockBoardModel struct{}
+type MockReplyModel struct{}
 
-func (m mockReplyRepositoryImpl) FindById(id int64) entity.Reply {
-	return entity.Reply{
-		ID: id,
-		Board: entity.Board{
-			ID:       1,
-			Title:    "테스트 제목 7",
-			Contents: "테스트 내용 7",
-		},
-		Content: "안녕하세요 반갑습니다.",
-	}
+func (r MockBoardModel) First(dest interface{}, _ ...interface{}) repository.BoardModel {
+	*dest.(*entity.Board) = entity.Board{ID: int64(10)}
+	return r
 }
+func (r MockBoardModel) Find(interface{}, ...interface{}) repository.BoardModel  { return r }
+func (r MockBoardModel) Create(interface{}) repository.BoardModel                { return r }
+func (r MockBoardModel) Where(interface{}, ...interface{}) repository.BoardModel { return r }
 
-func (m mockReplyRepositoryImpl) FindAll() []entity.Reply {
-	return []entity.Reply{
+func (m MockReplyModel) First(dest interface{}, _ ...interface{}) repository.ReplyModel {
+	board := entity.Board{
+		ID:       1,
+		Title:    "테스트 제목 7",
+		Contents: "테스트 내용 7",
+	}
+	*dest.(*entity.Reply) = entity.Reply{
+		ID:        30,
+		Board:     board,
+		Content:   "안녕하세요 반갑습니다.",
+		CreatedAt: time.Time{},
+		UpdatedAt: time.Time{},
+		DeletedAt: gorm.DeletedAt{},
+	}
+	return m
+}
+func (m MockReplyModel) Find(dest interface{}, _ ...interface{}) repository.ReplyModel {
+	board := entity.Board{
+		ID:       1,
+		Title:    "테스트 제목 7",
+		Contents: "테스트 내용 7",
+	}
+	*dest.(*[]entity.Reply) = []entity.Reply{
 		{
-			ID: 1,
-			Board: entity.Board{
-				ID:       2,
-				Title:    "테스트 제목 7",
-				Contents: "테스트 내용 7",
-			},
+			ID:      1,
 			Content: "안녕하세요 반갑습니다.",
+			Board:   board,
 		},
 		{
-			ID: 2,
-			Board: entity.Board{
-				ID:       2,
-				Title:    "테스트 제목 7",
-				Contents: "테스트 내용 7",
-			},
+			ID:      2,
 			Content: "안녕하세요 반갑습니다.2",
+			Board:   board,
+		},
+		{
+			ID:      3,
+			Content: "안녕하세요 반갑습니다.3",
+			Board:   board,
 		},
 	}
+	return m
+}
+func (m MockReplyModel) Create(value interface{}) repository.ReplyModel {
+	*value.(*entity.Reply) = entity.Reply{
+		ID:        10,
+		CreatedAt: time.Time{},
+		UpdatedAt: time.Time{},
+		DeletedAt: gorm.DeletedAt{},
+		BoardID:   0,
+		Board:     entity.Board{},
+		Content:   "",
+	}
+	return m
+}
+func (m MockReplyModel) Where(interface{}, ...interface{}) repository.ReplyModel {
+	return m
 }
 
-func (m mockReplyRepositoryImpl) Save(reply entity.Reply) int64 {
-	return reply.ID
-}
-
-var mockReply repository.ReplyRepository = repository.ReplyRepository{}
+var mockBoard = repository.BoardRepository{BoardModel: MockBoardModel{}}
+var mockReply = repository.ReplyRepository{ReplyModel: MockReplyModel{}}
 
 func TestReplyService_GetById(t *testing.T) {
 	type fields struct {
@@ -110,7 +140,7 @@ func TestReplyService_Save(t *testing.T) {
 	}{
 		{
 			name:   "reply > save success",
-			fields: fields{mockReply, mockBoardRepository},
+			fields: fields{mockReply, mockBoard},
 			args: args{
 				boardId: int64(10),
 			},
@@ -131,6 +161,12 @@ func TestReplyService_Save(t *testing.T) {
 }
 
 func TestReplyService_GetAll(t *testing.T) {
+	board := entity.Board{
+		ID:       1,
+		Title:    "테스트 제목 7",
+		Contents: "테스트 내용 7",
+	}
+
 	type fields struct {
 		Repository      repository.ReplyRepository
 		BoardRepository repository.BoardRepository
@@ -147,22 +183,19 @@ func TestReplyService_GetAll(t *testing.T) {
 			},
 			want: []entity.Reply{
 				{
-					ID: 1,
-					Board: entity.Board{
-						ID:       2,
-						Title:    "테스트 제목 7",
-						Contents: "테스트 내용 7",
-					},
+					ID:      1,
+					Board:   board,
 					Content: "안녕하세요 반갑습니다.",
 				},
 				{
-					ID: 2,
-					Board: entity.Board{
-						ID:       2,
-						Title:    "테스트 제목 7",
-						Contents: "테스트 내용 7",
-					},
+					ID:      2,
+					Board:   board,
 					Content: "안녕하세요 반갑습니다.2",
+				},
+				{
+					ID:      3,
+					Board:   board,
+					Content: "안녕하세요 반갑습니다.3",
 				},
 			},
 		},
@@ -174,7 +207,7 @@ func TestReplyService_GetAll(t *testing.T) {
 				BoardRepository: tt.fields.BoardRepository,
 			}
 			if got := r.GetAll(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GetAll() = %v, want %v", got, tt.want)
+				t.Errorf("GetAll() = %v\n, want %v", got, tt.want)
 			}
 		})
 	}
