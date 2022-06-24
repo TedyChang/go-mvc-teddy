@@ -6,19 +6,32 @@ import (
 	"gorm.io/gorm"
 )
 
-type Model interface {
-	Model(interface{}) (tx *gorm.DB)
-	First(dest interface{}, conds ...interface{}) (tx *gorm.DB)
-	Find(dest interface{}, conds ...interface{}) (tx *gorm.DB)
-	Create(value interface{}) (tx *gorm.DB)
+type UserModel interface {
+	First(dest interface{}, conds ...interface{}) UserModel
+	Find(dest interface{}, conds ...interface{}) UserModel
+	Create(value interface{}) UserModel
+}
+
+type UserQuery struct {
+	*gorm.DB
+}
+
+func (r UserQuery) First(dest interface{}, conds ...interface{}) UserModel {
+	return UserModel(UserQuery{r.DB.First(dest, conds)})
+}
+func (r UserQuery) Find(dest interface{}, conds ...interface{}) UserModel {
+	return UserModel(UserQuery{r.DB.Find(dest, conds)})
+}
+func (r UserQuery) Create(value interface{}) UserModel {
+	return UserModel(UserQuery{r.DB.Create(value)})
 }
 
 type UserRepository struct {
-	Model
+	UserModel
 }
 
 func NewUserRepository() UserRepository {
-	return UserRepository{database.Db}
+	return UserRepository{UserQuery{database.Db}}
 }
 
 func (r UserRepository) FindById(id int64) entity.User {

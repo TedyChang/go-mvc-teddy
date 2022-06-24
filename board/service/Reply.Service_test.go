@@ -124,6 +124,7 @@ func TestReplyService_GetById(t *testing.T) {
 }
 
 func TestReplyService_Save(t *testing.T) {
+	replyDto := dto.SaveReplyDto{Contents: "댓글을 저장하는 아무값"}
 	type fields struct {
 		Repository      repository.ReplyRepository
 		BoardRepository repository.BoardRepository
@@ -143,6 +144,7 @@ func TestReplyService_Save(t *testing.T) {
 			fields: fields{mockReply, mockBoard},
 			args: args{
 				boardId: int64(10),
+				dto1:    replyDto,
 			},
 			want: int64(10),
 		},
