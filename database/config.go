@@ -5,28 +5,36 @@ import (
 	entity2 "codetest/user/entity"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 )
 
 var Db *gorm.DB
 
 func GormSetting() {
-	db, err := gorm.Open(postgres.New(postgres.Config{
+	var err error
+	Db, err = gorm.Open(postgres.New(postgres.Config{
 		DSN: "host=localhost port=15432 user=postgres dbname=postgres password=postgres sslmode=disable",
 	}))
-	Db = db
 	if err != nil {
-		panic("failed to connect database")
+		log.Panicf("gorm setting err : %v", err)
+		return
 	}
 
-	db.AutoMigrate(&entity.Board{})
-	db.AutoMigrate(&entity.Reply{})
-	db.AutoMigrate(&entity2.User{})
+	err = Db.AutoMigrate(&entity.Board{})
+	if err != nil {
+		log.Panicf("board ddl err : %v", err)
+		return
+	}
 
-	//db.Create(&entity2.User{
-	//	CreatedAt: time.Time{},
-	//	UpdatedAt: time.Time{},
-	//	DeletedAt: gorm.DeletedAt{},
-	//	Name:      "teddy",
-	//})
+	err = Db.AutoMigrate(&entity.Reply{})
+	if err != nil {
+		log.Panicf("err : %v", err)
+		return
+	}
 
+	err = Db.AutoMigrate(&entity2.User{})
+	if err != nil {
+		log.Panicf("err : %v", err)
+		return
+	}
 }
