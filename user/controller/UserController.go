@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"codetest/rest/api"
 	"codetest/user/dto"
 	"codetest/user/service"
 	"codetest/util/gu"
@@ -16,7 +15,7 @@ func NewUserController(impl service.UserService) UserController {
 	return UserController{impl}
 }
 
-func (r UserController) Login() api.Gunc {
+func (r UserController) Login() gu.Gunc {
 	return func(c *gin.Context) {
 		var loginDto dto.UserLoginDto
 
@@ -24,12 +23,15 @@ func (r UserController) Login() api.Gunc {
 		if err1 != nil {
 			gu.BadJson(c, gin.H{"message": "error : not loginDto"})
 		}
-
-		gu.OkJson(c, gin.H{"id": r.UserService.Login(loginDto)})
+		token, err2 := r.UserService.Login(loginDto)
+		if err2 != nil {
+			return
+		}
+		gu.OkJson(c, gin.H{"token": token})
 	}
 }
 
-func (r UserController) SaveUser() api.Gunc {
+func (r UserController) SaveUser() gu.Gunc {
 	return func(c *gin.Context) {
 		var userDto dto.SaveUserDto
 
@@ -43,7 +45,7 @@ func (r UserController) SaveUser() api.Gunc {
 	}
 }
 
-func (r UserController) GetAll() api.Gunc {
+func (r UserController) GetAll() gu.Gunc {
 	return func(c *gin.Context) {
 		arr := r.UserService.GetAll()
 
@@ -51,7 +53,7 @@ func (r UserController) GetAll() api.Gunc {
 	}
 }
 
-func (r UserController) GetById() api.Gunc {
+func (r UserController) GetById() gu.Gunc {
 	return func(c *gin.Context) {
 		userId, err1 := gu.GetID("user", c)
 		if err1 != nil {
