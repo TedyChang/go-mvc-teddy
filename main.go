@@ -2,7 +2,7 @@ package main
 
 import (
 	"codetest/database"
-	"codetest/rest/gin"
+	"codetest/rest/api"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -19,5 +19,5 @@ func main() {
 	domain := url + ":" + port
 	database.GormSetting()
 
-	gin.RestApi(domain)
+	api.RestApi(domain)
 }

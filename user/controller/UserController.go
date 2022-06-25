@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"codetest/rest/api"
 	"codetest/user/dto"
 	"codetest/user/service"
 	"codetest/util/gu"
@@ -15,7 +16,20 @@ func NewUserController(impl service.UserService) UserController {
 	return UserController{impl}
 }
 
-func (r UserController) SaveUser() func(c *gin.Context) {
+func (r UserController) Login() api.Gunc {
+	return func(c *gin.Context) {
+		var loginDto dto.UserLoginDto
+
+		err1 := c.ShouldBindJSON(loginDto)
+		if err1 != nil {
+			gu.BadJson(c, gin.H{"message": "error : not loginDto"})
+		}
+
+		gu.OkJson(c, gin.H{"id": r.UserService.Login(loginDto)})
+	}
+}
+
+func (r UserController) SaveUser() api.Gunc {
 	return func(c *gin.Context) {
 		var userDto dto.SaveUserDto
 
@@ -29,7 +43,7 @@ func (r UserController) SaveUser() func(c *gin.Context) {
 	}
 }
 
-func (r UserController) GetAll() func(c *gin.Context) {
+func (r UserController) GetAll() api.Gunc {
 	return func(c *gin.Context) {
 		arr := r.UserService.GetAll()
 
@@ -37,7 +51,7 @@ func (r UserController) GetAll() func(c *gin.Context) {
 	}
 }
 
-func (r UserController) GetById() func(c *gin.Context) {
+func (r UserController) GetById() api.Gunc {
 	return func(c *gin.Context) {
 		userId, err1 := gu.GetID("user", c)
 		if err1 != nil {

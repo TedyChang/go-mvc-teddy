@@ -1,4 +1,4 @@
-package gin
+package api
 
 import (
 	"codetest/board"
@@ -6,6 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
+
+type Gunc func(c *gin.Context)
+
+func (r Gunc) toFunc() func(c *gin.Context) { return r }
 
 func RestApi(domain string) {
 	r := gin.Default()
@@ -25,9 +29,9 @@ func RestApi(domain string) {
 	r.GET("/boards/replies/:reply", ReplyController.GetReplyById())
 	r.POST("/boards/:board/replies", ReplyController.SaveReply())
 
-	r.GET("/users", UserController.GetAll())
-	r.GET("/users/:user", UserController.GetById())
-	r.POST("/users", UserController.SaveUser())
+	r.GET("/users", UserController.GetAll().toFunc())
+	r.GET("/users/:user", UserController.GetById().toFunc())
+	r.POST("/users", UserController.SaveUser().toFunc())
 
 	err := r.Run(domain)
 	if err != nil {

@@ -50,3 +50,9 @@ func (r *UserRepository) Save(user entity.User) int64 {
 	_ = r.Create(&user)
 	return user.ID
 }
+
+func (r UserRepository) Login(email string, password string) entity.User {
+	u := entity.User{}
+	r.First(&u, "email = ? AND password = ?", email, password)
+	return u
+}

@@ -1,9 +1,13 @@
 package service
 
 import (
+	"codetest/security"
 	"codetest/user/dto"
 	"codetest/user/entity"
 	"codetest/user/repository"
+	"github.com/cristalhq/jwt/v4"
+	_ "github.com/gin-gonic/gin"
+	"os"
 	"reflect"
 	"testing"
 )
@@ -107,6 +111,87 @@ func TestUserService_Save(t *testing.T) {
 			}
 			if got := r.Save(tt.args.dto); got != tt.want {
 				t.Errorf("Save() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestUserService_Login(t *testing.T) {
+	// given
+	_ = os.Setenv("TOKEN_SECRET", "goteddtymvc")
+
+	type fields struct {
+		Repository repository.UserRepository
+	}
+	type args struct {
+		dto dto.UserLoginDto
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name:   "user > login success",
+			fields: fields{mockUser},
+			args: args{
+				dto: dto.UserLoginDto{
+					Email:    "test@gmail.com",
+					Password: "test",
+				},
+			},
+			want: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMCIsInVzZXJfaWQiOjIwLCJhdXRoIjoidXNlciJ9.aymWBuJVmBv9oOOoySr16xNe0CSw13FazSeIcyS4cqI",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := UserService{
+				Repository: tt.fields.Repository,
+			}
+			if got, _ := r.Login(tt.args.dto); got != tt.want {
+				t.Errorf("Login() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestUserService_MyInfo(t *testing.T) {
+	// given
+	_ = os.Setenv("TOKEN_SECRET", "goteddtymvc")
+
+	type fields struct {
+		Repository repository.UserRepository
+	}
+	type args struct {
+		token string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   *security.Claim
+	}{
+		{
+			name:   "user > MyInfo success",
+			fields: fields{mockUser},
+			args: args{
+				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMCIsInVzZXJfaWQiOjIwLCJhdXRoIjoidXNlciJ9.aymWBuJVmBv9oOOoySr16xNe0CSw13FazSeIcyS4cqI",
+			},
+			want: &security.Claim{
+				RegisteredClaims: jwt.RegisteredClaims{Subject: "20"},
+				UserId:           20,
+				Auth:             "user",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := UserService{
+				Repository: tt.fields.Repository,
+			}
+			if got, _ := r.MyInfo(tt.args.token); got.Subject != tt.want.Subject || got.ID != tt.want.ID || got.Auth != tt.want.Auth {
+				t.Errorf("\n MyInfo() = %v,\n want =  %v", got, tt.want)
 			}
 		})
 	}
